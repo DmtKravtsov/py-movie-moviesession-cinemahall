@@ -1,0 +1,52 @@
+from datetime import datetime
+from db.models import MovieSession
+from django.utils import timezone
+timezone.now()
+
+
+def create_movie_session(movie_show_time: int,
+                         movie_id: int,
+                         cinema_hall_id: int) -> MovieSession:
+    movie_session = MovieSession.objects.create(
+        show_time=movie_show_time,
+        movie_id=movie_id,
+        cinema_hall_id=cinema_hall_id,
+    )
+    return movie_session
+
+
+def get_movies_sessions(session_date: str = None) -> list[MovieSession]:
+    queryset = MovieSession.objects.all()
+    if session_date:
+        parsed_date = datetime.strptime(session_date, "%Y-%m-%d")
+        queryset = queryset.filter(show_time__date=parsed_date)
+    return queryset
+
+
+def get_movie_session_by_id(movie_session_id: int) -> MovieSession:
+    movie_session = MovieSession.objects.get(id=movie_session_id)
+    return movie_session
+
+
+def update_movie_session(session_id: int,
+                         show_time: int = None,
+                         movie_id: int = None,
+                         cinema_hall_id: int = None) -> MovieSession:
+    updated_movie_session = MovieSession.objects.get(id=session_id)
+
+    if movie_id:
+        updated_movie_session.movie_id = movie_id
+
+    if cinema_hall_id:
+        updated_movie_session.cinema_hall_id = cinema_hall_id
+
+    if show_time:
+        updated_movie_session.show_time = show_time
+
+    updated_movie_session.save()
+    return updated_movie_session
+
+
+def delete_movie_session_by_id(session_id: int) -> None:
+    movie_session = MovieSession.objects.get(id=session_id)
+    movie_session.delete()
