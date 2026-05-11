@@ -1,10 +1,9 @@
 from datetime import datetime
+
 from db.models import MovieSession
-from django.utils import timezone
-timezone.now()
 
 
-def create_movie_session(movie_show_time: int,
+def create_movie_session(movie_show_time: datetime,
                          movie_id: int,
                          cinema_hall_id: int) -> MovieSession:
     movie_session = MovieSession.objects.create(
@@ -29,7 +28,7 @@ def get_movie_session_by_id(movie_session_id: int) -> MovieSession:
 
 
 def update_movie_session(session_id: int,
-                         show_time: int = None,
+                         show_time: datetime = None,
                          movie_id: int = None,
                          cinema_hall_id: int = None) -> MovieSession:
     updated_movie_session = MovieSession.objects.get(id=session_id)
